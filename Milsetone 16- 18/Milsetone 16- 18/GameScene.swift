@@ -10,8 +10,9 @@ import SpriteKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     var background: SKSpriteNode!
-    var player: SKSpriteNode!
+    var timerLabel: SKLabelNode!
     var scoreLabel: SKLabelNode!
+    
     
     var score = 0 {
         didSet {
@@ -19,8 +20,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    
     override func didMove(to view: SKView) {
-
         
         background = SKSpriteNode(imageNamed: "background")
         background.xScale = 1.8
@@ -29,6 +30,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         background.zPosition = -1
         addChild(background)
         
+        timerLabel = SKLabelNode(fontNamed: "Chalkduster")
+        timerLabel.text = "60 c"
+        timerLabel.position = CGPoint(x: 512, y: 700)
+        timerLabel.zPosition = 105
+        addChild(timerLabel)
+    
         scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
         scoreLabel.position = CGPoint(x: 1000, y: 700)
         scoreLabel.horizontalAlignmentMode = .right
@@ -38,10 +45,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         physicsWorld.gravity = .zero
         physicsWorld.contactDelegate = self
- 
-        }
+        
+
+    }
         
     override func update(_ currentTime: TimeInterval) {
         
     }
+    
 }
