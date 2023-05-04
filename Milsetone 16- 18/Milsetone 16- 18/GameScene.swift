@@ -13,6 +13,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var timerLabel: SKLabelNode!
     var scoreLabel: SKLabelNode!
     var shots: SKSpriteNode!
+    var aim: SKSpriteNode!
+    
     var shotsList = ["shots0", "shots1", "shots2", "shots3"]
     var shotsIterator = 0 {
         didSet {
@@ -51,6 +53,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         timerLabel.zPosition = 105
         addChild(timerLabel)
         
+        aim = SKSpriteNode(imageNamed: "aim")
+        aim.position = CGPoint(x: 100, y: 384)
+        aim.physicsBody = SKPhysicsBody(texture: aim.texture!, size: aim.size)
+        aim.physicsBody?.contactTestBitMask = 1
+        addChild(aim)
+        
         shots = SKSpriteNode(imageNamed: shotsList[shotsIterator])
         shots.position = CGPoint(x: 64, y: 32)
         addChild(shots)
@@ -78,9 +86,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
   @objc func createFoods() {
-      guard let enemy = foods.randomElement() else { return }
+      guard let food = foods.randomElement() else { return }
       
-      let sprite = SKSpriteNode(imageNamed: enemy)
+      let sprite = SKSpriteNode(imageNamed: food)
       sprite.position = CGPoint(x: 1200, y: Int.random(in: 50...800))
       addChild(sprite)
         
@@ -90,6 +98,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
       sprite .physicsBody?.angularVelocity = 4
       sprite.physicsBody?.linearDamping = 0
       sprite.physicsBody?.angularDamping = 1
+    }
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        var location = touch.location(in: self)
+        
+        if location.y < 100 {
+            location.y = 100
+        } else if location.y > 668 {
+            location.y = 668
+        }
+        aim.position = location
+    }
+    func boom() {
+        let explosion = SKEffectNode(fileNamed: "explosion")!
+        explosion.position = aim.position
+        addChild(explosion)
+    }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        boom()
+        
     }
     
 }
